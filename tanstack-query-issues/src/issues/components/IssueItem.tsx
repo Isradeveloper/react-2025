@@ -1,6 +1,9 @@
 import { FiInfo, FiMessageSquare, FiCheckCircle } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { GithubIssue } from "../interfaces";
+import { useQueryClient } from "@tanstack/react-query";
+import { getIssueByNumber, getIssueComments } from "../actions";
+import { timeSince } from "../../helpers";
 
 interface IssueItemProps {
   issue: GithubIssue;
@@ -9,8 +12,34 @@ interface IssueItemProps {
 export const IssueItem = ({ issue }: IssueItemProps) => {
   const navigate = useNavigate();
 
+  const queryClient = useQueryClient();
+
+  const prefetchData = () => {
+    queryClient.prefetchQuery({
+      queryKey: ["issue", issue.number],
+      queryFn: () => getIssueByNumber(issue.number),
+      staleTime: 1000 * 60,
+    });
+
+    queryClient.prefetchQuery({
+      queryKey: ["issue", "comments", issue.number],
+      queryFn: () => getIssueComments(issue.number),
+      staleTime: 1000 * 60,
+    });
+  };
+
+  const presetData = () => {
+    queryClient.setQueryData(["issue", issue.number], issue, {
+      updatedAt: new Date().getTime() + 1000 * 60,
+    });
+  };
+
   return (
-    <div className="flex animate-fadeIn items-center px-2 py-3 mb-5 border rounded-md bg-slate-900 hover:bg-slate-800">
+    <div
+      className="flex animate-fadeIn items-center px-2 py-3 mb-5 border rounded-md bg-slate-900 hover:bg-slate-800"
+      // onMouseEnter={prefetchData}
+      onMouseEnter={presetData}
+    >
       {issue.state === "open" ? (
         <FiCheckCircle
           size={30}
@@ -32,9 +61,24 @@ export const IssueItem = ({ issue }: IssueItemProps) => {
           {issue.title}
         </a>
         <span className="text-gray-500">
-          {`#${issue.number}`} opened 2 days ago by{" "}
+          {`#${issue.number}`} opened {timeSince(issue.created_at)} ago by{" "}
           <span className="font-bold">{issue.user.login}</span>
         </span>
+
+        <div className="flex flex-wrap mt-2">
+          {issue.labels.map((label) => (
+            <span
+              key={label.id}
+              className="text-xs bg-gray-800 rounded-md px-2 py-1 mx-1"
+              style={{
+                border: `1px solid #${label.color}`,
+                color: `#${label.color}`,
+              }}
+            >
+              {label.name}
+            </span>
+          ))}
+        </div>
       </div>
 
       <img
