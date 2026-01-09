@@ -1,24 +1,71 @@
 import { Button, Image, Input, Textarea } from "@nextui-org/react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { useProductMutation } from "../hooks/useProductMutation";
+
+interface FormInputs {
+  title: string;
+  price: number;
+  description: string;
+  category: string;
+  image: string;
+}
 
 export const NewProduct = () => {
+  const { mutation: productMutation } = useProductMutation();
 
-  
+  const { register, handleSubmit, watch } = useForm<FormInputs>({
+    defaultValues: {
+      title: "",
+      price: 0,
+      description: "",
+      category: "men's clothing",
+      image: "",
+    },
+  });
+
+  const newImage = watch("image");
+
+  const onSubmit: SubmitHandler<FormInputs> = (data) => {
+    productMutation.mutate(data);
+  };
 
   return (
     <div className="w-full flex-col">
       <h1 className="text-2xl font-bold">Nuevo producto</h1>
 
-      <form className="w-full">
-
+      <form
+        className="w-full"
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <div className="flex justify-around items-center">
-          
           <div className="flex-col w-[500px]">
-
-            <Input className="mt-2" type="text" label="Titulo del producto" />
-            <Input className="mt-2" type="number" label="Precio del producto" />
-            <Input className="mt-2" type="url" label="Url del producto" />
-            <Textarea className="mt-2" label="Descripcion del producto" />
-            <select className="rounded-md p-3 mt-2 bg-gray-800 w-full">
+            <Input
+              className="mt-2"
+              type="text"
+              label="Titulo del producto"
+              {...register("title")}
+            />
+            <Input
+              className="mt-2"
+              type="number"
+              label="Precio del producto"
+              {...register("price", { valueAsNumber: true })}
+            />
+            <Input
+              className="mt-2"
+              type="url"
+              label="Url del producto"
+              {...register("image")}
+            />
+            <Textarea
+              className="mt-2"
+              label="Descripcion del producto"
+              {...register("description")}
+            />
+            <select
+              className="rounded-md p-3 mt-2 bg-gray-800 w-full"
+              {...register("category")}
+            >
               <option value="men's clothing">Men's clothing</option>
               <option value="women's clothing">Women's clothing</option>
               <option value="jewelery">Jewelery</option>
@@ -26,24 +73,31 @@ export const NewProduct = () => {
             </select>
 
             <br />
-            <Button className="mt-2" color="primary">Crear</Button>
+            <Button
+              className="mt-2"
+              color="primary"
+              type="submit"
+              isLoading={productMutation.isPending}
+              isDisabled={productMutation.isPending}
+            >
+              {productMutation.isPending ? "Creando..." : "Crear"}
+            </Button>
           </div>
 
-          <div className="bg-white rounded-2xl p-10 flex items-center" style={{
-            width: '500px',
-            height: '600px',
-          }}>
-
+          <div
+            className="bg-white rounded-2xl p-10 flex items-center"
+            style={{
+              width: "500px",
+              height: "600px",
+            }}
+          >
             <Image
-              src="https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_.jpg"
+              src={newImage}
+              key={newImage}
             />
           </div>
-          
         </div>
-
-
       </form>
-
     </div>
-  )
-}
+  );
+};

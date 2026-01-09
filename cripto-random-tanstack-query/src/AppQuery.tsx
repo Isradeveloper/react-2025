@@ -6,7 +6,7 @@ function App() {
 
   return (
     <>
-      {randomQuery.isFetching ? (
+      {randomQuery.isL.isFetching ? (
         <h1>Loading...</h1>
       ) : (
         <h1 className='text-3xl font-bold underline'>Number: {randomQuery.data}</h1>
