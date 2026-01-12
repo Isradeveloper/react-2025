@@ -23,11 +23,18 @@ export const ItemCounter = ({ name, quantity = 0 }: ItemCounterProps) => {
     <>
       <section className={styles.section}>
         <h3>{name}</h3>
-        <button className={styles.counterButton} onClick={handleSubtract}>
+
+        <button
+          className={styles.counterButton}
+          onClick={handleSubtract}>
           -1
         </button>
+
         <span>{count}</span>
-        <button className={styles.counterButton} onClick={handleAdd}>
+
+        <button
+          className={styles.counterButton}
+          onClick={handleAdd}>
           +1
         </button>
       </section>
