@@ -1,0 +1,23 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`FirstStepsApp > should render the first steps app 1`] = `
+<div>
+  <h1
+    style="color: red; font-size: 2rem; font-weight: bold; text-align: center; text-decoration: underline; text-transform: uppercase;"
+  >
+    Carrito de compras
+  </h1>
+  <div
+    data-testid="item-counter"
+  />
+  <div
+    data-testid="item-counter"
+  />
+  <div
+    data-testid="item-counter"
+  />
+  <div
+    data-testid="item-counter"
+  />
+</div>
+`;

@@ -22,7 +22,7 @@ export const ItemCounter = ({ name, quantity = 0 }: ItemCounterProps) => {
   return (
     <>
       <section className={styles.section}>
-        <h3>{name}</h3>
+        <h3 data-testid="h3-name">{name}</h3>
 
         <button
           className={styles.counterButton}
