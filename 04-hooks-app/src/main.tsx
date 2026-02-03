@@ -1,10 +1,10 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import { FocusScreen } from "./04-useRef/FocusScreen";
+import { ScrambleWords } from "./05-useReducer/ScrambleWordsApp";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <FocusScreen />
+    <ScrambleWords />
   </StrictMode>,
 );
