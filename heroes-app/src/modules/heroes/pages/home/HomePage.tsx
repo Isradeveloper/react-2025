@@ -9,11 +9,14 @@ import { CustomBreadcrumb } from '@/components/custom/CustomBreadcrumb';
 import { useHeroesSummary } from '../../hooks/useHeroesSummary';
 import { usePaginatedHeroes } from '../../hooks/usePaginatedHeroes';
 import { useQueryParams } from '@/hooks/useQueryParams';
+import { use } from 'react';
+import { FavoriteHeroContext } from '../../context/FavoriteHeroContext';
 
 export const HomePage = () => {
   const { page, limit, category, selectedTab, handleSetSearchParams } =
     useQueryParams();
   const { summary } = useHeroesSummary();
+  const { favoritesCount, favorites } = use(FavoriteHeroContext);
 
   const {
     paginatedHeroes: { data },
@@ -72,7 +75,7 @@ export const HomePage = () => {
                 ])
               }>
               <Heart className="h-4 w-4" />
-              Favorites (0)
+              Favorites ({favoritesCount})
             </TabsTrigger>
             <TabsTrigger
               value="heroes"
@@ -105,10 +108,14 @@ export const HomePage = () => {
         </Tabs>
 
         {/* Character Grid */}
-        <HeroGrid heroes={data?.heroes || []} />
+        <HeroGrid
+          heroes={selectedTab === 'favorites' ? favorites : data?.heroes || []}
+        />
 
         {/* Pagination */}
-        <CustomPagination totalPages={data?.pages ?? 0} />
+        {selectedTab !== 'favorites' && (
+          <CustomPagination totalPages={data?.pages ?? 0} />
+        )}
       </>
     </>
   );
