@@ -8,6 +8,9 @@ type Props = {
 const AdminLayout = lazy(() => import('../layouts/AdminLayout'));
 const DashboardPage = lazy(() => import('../pages/dashboard/DashboardPage'));
 const ProductsPage = lazy(() => import('../pages/products/AdminProductsPage'));
+const AdminProductPage = lazy(
+  () => import('../pages/product/AdminProductPage')
+);
 
 export const adminRoutes = ({ path }: Props) => [
   {
@@ -30,6 +33,10 @@ export const adminRoutes = ({ path }: Props) => [
       {
         path: 'products',
         element: <ProductsPage />,
+      },
+      {
+        path: 'products/:slug',
+        element: <AdminProductPage />,
       },
     ],
   },
